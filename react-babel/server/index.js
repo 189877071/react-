@@ -56,13 +56,14 @@ app.use(async (ctx) => {
 })
 
 function replaceTemplate(content, data, bundles, template) {
+    
     if (!Array.isArray(bundles) || !template) {
         return
     }
 
     let [link, script, only] = ['', '', []]
 
-    const state = `<script>window.__INITIAL_STATE__= ${(data ? JSON.stringify() : 'undefined')}</script>`
+    const state = `<script>window.__INITIAL_STATE__= ${(data ? JSON.stringify(data) : 'undefined')}</script>`
 
     bundles.forEach(item => {
         if (only.indexOf(item.publicPath) != -1) {

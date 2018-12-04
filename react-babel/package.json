@@ -8,10 +8,12 @@
     "dev": "webpack-dev-server --config ./build/webpack.dev.config.js",
     "dll": "webpack --config ./build/webpack.dll.config.js",
     "build": "webpack --config ./build/webpack.product.config.js",
-    "ssr": "webpack --config ./build/webpack.ssr.config.js && webpack --config ./build/webpack.server.config.js",
+    "ssrserver": "webpack --config ./build/webpack.server.config.js",
+    "ssr": "webpack --config ./build/webpack.ssr.config.js && npm run ssrserver",
     "initssr": "npm run dll && npm run ssr && cd server && node index",
-    "init": "npm run dll && npm run build",
-    "server": "webpack --config ./build/webpack.server.config.js"
+    "initbuild": "npm run dll && npm run build",
+    "initdev": "npm run dll && npm run dev",
+    "server": "cd server && node server"
   },
   "devDependencies": {
     "@babel/core": "^7.1.6",
