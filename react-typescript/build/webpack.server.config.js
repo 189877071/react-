@@ -8,11 +8,13 @@ const nodeExternals = require('webpack-node-externals')
 
 const { extensions, rulesConfig, HappyPackConfig, MiniCssExtractPluginConfig } = require('./util')
 
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
+
 module.exports = {
     target: 'node',
     mode: 'production',
     devtool: false,
-    entry: join(__dirname, '../src/ssrServerMain.jsx'),
+    entry: join(__dirname, '../src/ssrServerMain.tsx'),
     output: {
         publicPath: '/',
         path: join(__dirname, '../serverDist'),
@@ -35,10 +37,12 @@ module.exports = {
         ]
     },
     plugins: [
+        // new HardSourceWebpackPlugin(),
         new webpack.DefinePlugin({
             "process.env": {
                 dev: JSON.stringify(false),
-                ssr: JSON.stringify(true)
+                ssr: JSON.stringify(true),
+                browser: JSON.stringify(false), 
             }
         }),
         ...HappyPackConfig(),

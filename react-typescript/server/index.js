@@ -63,12 +63,17 @@ function replaceTemplate(content, data, bundles, template) {
     const state = `<script>window.__INITIAL_STATE__= ${(data ? JSON.stringify(data) : 'undefined')}</script>`
 
     bundles.forEach(item => {
-        if (only.indexOf(item.publicPath) != -1) {
-            return
-        }
-        else {
+        if (item && item.publicPath && only.indexOf(item.publicPath) == -1) {
             only.push(item.publicPath)
         }
+        else {
+            return
+        }
+
+        if(template.indexOf(item.publicPath) !== -1) {
+            return
+        }
+
         if (/\.css$/.test(item.publicPath)) {
             link += `<link href="${item.publicPath}" rel="stylesheet">`
         }

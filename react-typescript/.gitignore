@@ -1,0 +1,7 @@
+node_modules
+yarn.lock
+.vscode
+dist
+serverDist
+manifest
+.awcache

@@ -1,8 +1,10 @@
 const webpack = require('webpack')
 
+const { join } = require('path')
+
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 
-const { dllEntry, dllOutput, manifestPath, root, UglifyJsPluginConfig } = require('./util')
+const { dllEntry, dllOutput, UglifyJsPluginConfig } = require('./util')
 
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 
@@ -15,11 +17,11 @@ module.exports = {
     },
     plugins: [
         new HardSourceWebpackPlugin(),
-        new CleanWebpackPlugin(['dist', 'manifest'], { root }),
+        new CleanWebpackPlugin(['dist', 'manifest'], { root: join(__dirname, '..') }),
         new webpack.optimize.ModuleConcatenationPlugin(),
         new webpack.DllPlugin({
-            context: root,
-            path: manifestPath,
+            context: join(__dirname, '..'),
+            path: join(__dirname, '../manifest', '[name].json'),
             name: dllOutput.library
         })
     ]

@@ -4,20 +4,18 @@ const { join } = require('path')
 
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
-const HappyPack = require('happypack')
-
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+const HappyPack = require('happypack')
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 
-const root = exports.root = join(__dirname, '../')
-
 const dllEntry = exports.dllEntry = {
     react: ['react', 'react-dom', 'react-redux', 'react-router-dom', 'react-transition-group', 'react-loadable'],
     axios: ['axios'],
-    redux: ['redux', 'redux-ssr-thunk'],
+    redux: ['redux', 'redux-thunk'],
     core: ['core-js/es6']
 }
 
@@ -27,10 +25,6 @@ exports.dllOutput = {
     library: '[name]_[hash:5]',
     filename: `lib/[name]_[hash:5].dll.js`
 }
-
-exports.extensions = ['.jsx', '.js', '.json']
-
-exports.manifestPath = join(__dirname, '../manifest', '[name].json')
 
 exports.UglifyJsPluginConfig = function UglifyJsPluginConfig() {
     return new UglifyJsPlugin({
@@ -51,6 +45,41 @@ exports.UglifyJsPluginConfig = function UglifyJsPluginConfig() {
 
 exports.rulesConfig = function rulesConfig(isDiv) {
     return [
+        {
+            test: /\.(tsx|ts)?$/,
+            exclude: /node_modules/,
+            use: [
+                {
+                    loader: "awesome-typescript-loader",
+                    options: {
+                        forceIsolatedModules: true,
+                        useCache: true,
+                        useBabel: true,
+                        babelCore: '@babel/core',
+                        babelOptions: {
+                            "presets": [
+                                "@babel/preset-env",
+                                "@babel/preset-react"
+                            ],
+                            "plugins": [
+                                "@babel/plugin-transform-runtime",
+                                [
+                                    "@babel/plugin-proposal-decorators",
+                                    {
+                                        "legacy": true
+                                    }
+                                ],
+                                "@babel/plugin-proposal-class-properties",
+                                "@babel/plugin-proposal-function-bind",
+                                "@babel/plugin-proposal-export-namespace-from",
+                                "@babel/plugin-syntax-dynamic-import",
+                                "react-loadable/babel"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
         {
             test: /\.(js|jsx)$/,
             exclude: /node_modules/,
@@ -90,46 +119,43 @@ exports.rulesConfig = function rulesConfig(isDiv) {
     ]
 }
 
+exports.extensions = ['.tsx', '.ts', '.jsx', '.js', '.json']
+
+exports.HtmlWebpackPluginConfig = function HtmlWebpackPluginConfig() {
+    return new HtmlWebpackPlugin({
+        template: join(__dirname, '../index.html'),
+        alwaysWriteToDisk: true,
+        filename: 'index.html',
+        title: 'react脚手架'
+    })
+}
+
 exports.DllReferencePlugin = function DllReferencePlugin() {
     return Object.keys(dllEntry).map(item => {
         return new webpack.DllReferencePlugin({
-            context: root,
+            context: join(__dirname, '..'),
             manifest: require(`../manifest/${item}.json`)
         })
     })
 }
 
 exports.HappyPackConfig = function HappyPackConfig() {
-    const cssmodules = true;
     return [
         new HappyPack({
             id: 'js',
             loaders: [
-                {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env', '@babel/preset-react'],
-                        plugins: [
-                            "@babel/plugin-transform-runtime",
-                            ["@babel/plugin-proposal-decorators", { legacy: true }],
-                            "@babel/plugin-proposal-class-properties",
-                            "@babel/plugin-proposal-function-bind",
-                            "@babel/plugin-proposal-export-namespace-from",
-                            "@babel/plugin-syntax-dynamic-import",
-                            "react-loadable/babel",
-                        ]
-                    }
-                }
+                { loader: 'source-map-loader', enforce: 'pre' }
             ]
         }),
         new HappyPack({
             id: 'less',
             loaders: [
                 {
-                    loader: 'css-loader',
-                    query: {
-                        minimize: false,
-                        modules: cssmodules,
+                    loader: 'typings-for-css-modules-loader',
+                    options: {
+                        modules: true,
+                        namedExport: true,
+                        camelCase: true,
                         localIdentName: '[name]-[hash:base64:5]'
                     }
                 },
@@ -140,27 +166,11 @@ exports.HappyPackConfig = function HappyPackConfig() {
         new HappyPack({
             id: 'css',
             loaders: [
-                {
-                    loader: 'css-loader',
-                    query: {
-                        minimize: false,
-                        modules: cssmodules,
-                        localIdentName: '[name]-[hash:base64:5]'
-                    }
-                },
+                { loader: 'css-loader' },
                 { loader: 'postcss-loader' }
             ]
         })
     ]
-}
-
-exports.HtmlWebpackPluginConfig = function HtmlWebpackPluginConfig() {
-    return new HtmlWebpackPlugin({
-        template: join(__dirname, '../index.html'),
-        alwaysWriteToDisk: true,
-        filename: 'index.html',
-        title: 'react脚手架'
-    })
 }
 
 exports.MiniCssExtractPluginConfig = function MiniCssExtractPluginConfig() {

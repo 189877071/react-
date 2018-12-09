@@ -1,20 +1,20 @@
 {
-  "name": "react-babel",
+  "name": "react-typescript",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server --config ./build/webpack.dev.config.js",
     "dll": "webpack --config ./build/webpack.dll.config.js",
+    "dev": "webpack-dev-server --config ./build/webpack.dev.config.js",
     "build": "webpack --config ./build/webpack.product.config.js",
+    "ssr": "webpack --config ./build/webpack.ssr.config.js",
     "ssrserver": "webpack --config ./build/webpack.server.config.js",
-    "ssr": "webpack --config ./build/webpack.ssr.config.js && npm run ssrserver",
-    "initssr": "npm run dll && npm run ssr && cd server && node index",
-    "initbuild": "npm run dll && npm run build",
-    "initdev": "npm run dll && npm run dev",
-    "server": "cd server && node server"
+    "initssr": "npm run dll && npm run ssr && npm run ssrserver",
+    "initdev": "npm run dll && npm run dev"
   },
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.1.6",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
@@ -28,8 +28,9 @@
     "@babel/preset-env": "^7.1.6",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.1.5",
-    "autoprefixer": "^9.3.1",
     "babel-loader": "^8.0.4",
+    "autoprefixer": "^9.3.1",
+    "awesome-typescript-loader": "^5.2.1",
     "clean-webpack-plugin": "^1.0.0",
     "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^1.0.1",
@@ -43,7 +44,10 @@
     "mini-css-extract-plugin": "^0.4.5",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "postcss-loader": "^3.0.0",
+    "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
+    "typescript": "^3.2.2",
+    "typings-for-css-modules-loader": "^1.7.0",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.26.0",
@@ -53,9 +57,19 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
+    "@types/react": "^16.7.7",
+    "@types/react-dom": "^16.0.10",
+    "@types/react-loadable": "^5.4.2",
+    "@types/react-redux": "^6.0.10",
+    "@types/react-router-dom": "^4.3.1",
+    "@types/react-transition-group": "^2.0.14",
+    "@types/redux": "^3.6.0",
+    "@types/redux-thunk": "^2.1.0",
     "axios": "^0.18.0",
     "koa": "^2.6.2",
+    "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
+    "koa2-cors": "^2.0.6",
     "react": "^16.6.3",
     "react-async-bootstrapper": "^2.1.1",
     "react-dom": "^16.6.3",
@@ -64,8 +78,16 @@
     "react-router-dom": "^4.3.1",
     "react-transition-group": "^2.5.0",
     "redux": "^4.0.1",
-    "redux-ssr-thunk": "^1.0.7"
+    "redux-ssr-thunk": "^1.0.7",
+    "redux-thunk": "^2.3.0"
   },
-  "author": "李林",
-  "license": "ISC"
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8",
+    "iOS >= 8",
+    "Firefox >= 20",
+    "Android > 4.4",
+    "not dead"
+  ]
 }
