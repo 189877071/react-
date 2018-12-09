@@ -8,12 +8,12 @@
     "dll": "webpack --config ./build/webpack.dll.config.js",
     "dev": "webpack-dev-server --config ./build/webpack.dev.config.js",
     "build": "webpack --config ./build/webpack.product.config.js",
-    "ssr": "webpack --config ./build/webpack.ssr.config.js",
+    "ssr": "webpack --config ./build/webpack.ssr.config.js && npm run ssrserver",
     "ssrserver": "webpack --config ./build/webpack.server.config.js",
     "initssr": "npm run dll && npm run ssr && npm run ssrserver",
     "initdev": "npm run dll && npm run dev"
   },
-  "author": "",
+  "author": "李林",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.1.6",
